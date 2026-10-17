@@ -473,6 +473,10 @@ if(/[?&]demo\b/.test(location.search)){
   cycle();
   setInterval(()=>{if(!fetching)showStatus()},1000);
   document.addEventListener("visibilitychange",()=>{if(document.hidden){clearTimeout(timer);showStatus()}else cycle()});
+  // Saturday auto-reload: new picks usually go up on Saturday, so open pages reload once a minute
+  // to pick up the latest version. Uses Eastern time, skips hidden tabs, and never reloads during a live game.
+  const isSaturdayET=()=>new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short"}).format(new Date())==="Sat";
+  setInterval(()=>{if(isSaturdayET()&&!document.hidden&&!GAMES.some(isLive))location.reload()},60000);
 }
 </script>
 </body>
